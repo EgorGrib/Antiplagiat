@@ -11,26 +11,40 @@ IConfigurationSection outFile = config.GetSection("out");
 
 string? folderPath = inputfile.Get<string>();
 string? outPath = outFile.Get<string>();
-string[] files = Array.Empty<string>();
-if (folderPath != null)
-    files = Directory.GetFiles(folderPath);
 
-var paths = files.ToList();
-var difference = new Dictionary<string, double>();
-for (int i = 0; i < paths.Count; i++)
+try
 {
-    for (int j = i; j < paths.Count; j++) {
-        if (i != j) {
-            difference.Add($"{files[i]} {files[j]}", 
-                Difference.CalculateSimilarity(File.ReadAllText(files[i]), File.ReadAllText(files[j])));
+    string[] files = Directory.GetFiles(folderPath!);
+    var paths = files.ToList();
+    if(files.Length == 0)
+    {
+        Console.WriteLine("There are no files in the folder");
+    }
+    else
+    {
+        var difference = new Dictionary<string, double>();
+        for (int i = 0; i < paths.Count; i++)
+        {
+            for (int j = i; j < paths.Count; j++)
+            {
+                if (i != j) 
+                {
+                    difference.Add($"{files[i]} {files[j]}", 
+                        LevenshteinDistance.CalculateSimilarity(File.ReadAllText(files[i]), 
+                            File.ReadAllText(files[j])));
+                }
+            }
         }
+        var stringBuilder = new StringBuilder();
+        foreach (KeyValuePair<string, double> dif in difference)
+        {
+            //Console.WriteLine(dif.Key + $" {dif.Value:P2}");
+            stringBuilder.Append(dif.Key + $" {dif.Value:P2}\n");
+        }
+        File.WriteAllText(outPath!, stringBuilder.ToString());
     }
 }
-
-var stringBuilder = new StringBuilder();
-foreach (KeyValuePair<string, double> dif in difference)
+catch (Exception e)
 {
-    //Console.WriteLine(dif.Key + $" {dif.Value:P2}");
-    stringBuilder.Append(dif.Key + $" {dif.Value:P2}\n");
+    Console.WriteLine(e.Message);
 }
-File.WriteAllText(outPath!, stringBuilder.ToString());

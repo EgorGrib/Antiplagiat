@@ -1,8 +1,8 @@
 namespace KysectAcademyTask;
 
-public static class Difference
+public class LevenshteinDistance
 {
-    private static int LevenshteinDistance(string string1, string string2)
+    private static int CalculateDictance(string string1, string string2)
     {
         if (string1 == null) throw new ArgumentNullException(nameof(string1));
         if (string2 == null) throw new ArgumentNullException(nameof(string2));
@@ -29,7 +29,7 @@ public static class Difference
         if (source.Length == 0 || target.Length == 0) return 0.0;
         if (source == target) return 1.0;
    
-        int stepsToSame = LevenshteinDistance(source, target);
+        int stepsToSame = CalculateDictance(source, target);
         return 1.0 - ((double)stepsToSame / Math.Max(source.Length, target.Length));
     }
 }
