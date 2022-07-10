@@ -2,10 +2,10 @@ namespace KysectAcademyTask;
 
 public class LevenshteinDistance
 {
-    private static int CalculateDictance(string string1, string string2)
+    private int CalculateDictance(string string1, string string2)
     {
-        if (string1 == null) throw new ArgumentNullException(nameof(string1));
-        if (string2 == null) throw new ArgumentNullException(nameof(string2));
+        ArgumentNullException.ThrowIfNull(nameof(string1));
+        ArgumentNullException.ThrowIfNull(nameof(string2));
         int[,] m = new int[string1.Length + 1, string2.Length + 1];
 
         for (int i = 0; i <= string1.Length; i++) { m[i, 0] = i; }
@@ -23,9 +23,8 @@ public class LevenshteinDistance
         return m[string1.Length, string2.Length];
     }
 
-    public static double CalculateSimilarity(string? source, string? target)
+    public double CalculateSimilarity(string source, string target)
     {
-        if (source == null || target == null) return 0.0;
         if (source.Length == 0 || target.Length == 0) return 0.0;
         if (source == target) return 1.0;
    

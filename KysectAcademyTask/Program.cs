@@ -9,40 +9,27 @@ IConfigurationRoot config = new ConfigurationBuilder()
 IConfigurationSection inputfile = config.GetSection("folder");
 IConfigurationSection outFile = config.GetSection("out");
 
-string? folderPath = inputfile.Get<string>();
-string? outPath = outFile.Get<string>();
+string? folderSection = inputfile.Get<string>();
+string? outSection = outFile.Get<string>();
 
 try
 {
-    string[] files = Directory.GetFiles(folderPath!);
-    var paths = files.ToList();
-    if(files.Length == 0)
+    if (folderSection is null)
     {
-        Console.WriteLine("There are no files in the folder");
+        throw new Exception("Folder path section not found in appsettings.json");
     }
-    else
+    Dictionary<string, double> difference = new Comparator().CompareFilesInFolder(folderSection);
+    var stringBuilder = new StringBuilder();
+    foreach (KeyValuePair<string, double> dif in difference)
     {
-        var difference = new Dictionary<string, double>();
-        for (int i = 0; i < paths.Count; i++)
-        {
-            for (int j = i; j < paths.Count; j++)
-            {
-                if (i != j) 
-                {
-                    difference.Add($"{files[i]} {files[j]}", 
-                        LevenshteinDistance.CalculateSimilarity(File.ReadAllText(files[i]), 
-                            File.ReadAllText(files[j])));
-                }
-            }
-        }
-        var stringBuilder = new StringBuilder();
-        foreach (KeyValuePair<string, double> dif in difference)
-        {
-            //Console.WriteLine(dif.Key + $" {dif.Value:P2}");
-            stringBuilder.Append(dif.Key + $" {dif.Value:P2}\n");
-        }
-        File.WriteAllText(outPath!, stringBuilder.ToString());
+        //Console.WriteLine(dif.Key + $" {dif.Value:P2}");
+        stringBuilder.Append(dif.Key + $" {dif.Value:P2}\n");
     }
+    if (outSection is null)
+    {
+        throw new Exception("Output file path section not found in appsettings.json");
+    }
+    File.WriteAllText(outSection, stringBuilder.ToString());
 }
 catch (Exception e)
 {
