@@ -1,6 +1,6 @@
 namespace KysectAcademyTask;
 
-public class LevenshteinDistance
+public class LevenshteinDistance : IComparisonAlgorithm
 {
     private int CalculateDictance(string string1, string string2)
     {

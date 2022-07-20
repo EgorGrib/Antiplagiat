@@ -2,27 +2,91 @@ namespace KysectAcademyTask;
 
 public class Comparator
 {
-    public Dictionary<string, double> CompareFilesInFolder(string path)
+    public Dictionary<string, double> CompareFilesInFolder(string algoritm, string path, List<string>? dirFilter, 
+        List<string>? extensionWhiteList, List<string>? whiteList, List<string>? blackList)
     {
-        string[] files = Directory.GetFiles(path);
-        var paths = files.ToList();
-        var difference = new Dictionary<string, double>();
+        string[] files = DirSearch(path).ToArray();
+        var submits = new List<SubmitFile>();
+        
         if(files.Length == 0)
         {
             throw new Exception("There are no files in the folder");
         }
-        for (int i = 0; i < paths.Count; i++)
+
+        if (dirFilter is not null)
         {
-            for (int j = i; j < paths.Count; j++)
+            for (int i = 0; i < dirFilter.Count; i++)
             {
-                if (i != j)
+                dirFilter[i] = "\\" + dirFilter[i] + "\\";
+            }
+        }
+        
+        if (extensionWhiteList is not null)
+        {
+            foreach (string file in files)
+            {
+                if (extensionWhiteList.Any(s=>file.EndsWith(s)) && dirFilter is null)
                 {
-                    difference.Add($"{files[i]} {files[j]}",
-                        new LevenshteinDistance().CalculateSimilarity(File.ReadAllText(files[i]),
-                            File.ReadAllText(files[j])));
+                    submits.Add(new SubmitFile(file));
+                }
+                else 
+                {
+                    if (dirFilter is not null && dirFilter.Any(s=>file.Contains(s)))
+                        continue;
+                    if (extensionWhiteList.Any(s=>file.EndsWith(s)))
+                    {
+                        submits.Add(new SubmitFile(file));
+                    }
+                }
+                
+            }
+        }
+        else
+        {
+            foreach (string file in files)
+            {
+                if (dirFilter is null)
+                {
+                    submits.Add(new SubmitFile(file));
+                }
+                else if (!dirFilter.Any(s=>file.Contains(s)))
+                {
+                    submits.Add(new SubmitFile(file));
                 }
             }
         }
-        return difference;
+
+        ComparisonAlgorithmContext comparisonAlgorithmContext;
+        if (algoritm == "LevenshteinDistance")
+        {
+            comparisonAlgorithmContext = new ComparisonAlgorithmContext(new LevenshteinDistance());
+        }
+        else
+        {
+            throw new Exception("Comparison algorithm not found");
+        }
+        
+        var comparisonLogicContext = new ComparisonLogicContext(new BasicComparisonLogic());
+        return comparisonLogicContext.CompareSubmits(submits, 
+            comparisonAlgorithmContext, whiteList, blackList);
+    }
+    
+    private List<string> DirSearch(string sDir)
+    {
+        var files = new List<string>();
+        try
+        {
+            files.AddRange(Directory.GetFiles(sDir));
+            foreach (string d in Directory.GetDirectories(sDir))
+            {
+                files.AddRange(DirSearch(d));
+            }
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e.Message);
+        }
+
+        return files;
     }
 }

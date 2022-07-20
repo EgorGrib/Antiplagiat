@@ -1,35 +1,51 @@
-﻿using System.Text;
-using KysectAcademyTask;
+﻿using KysectAcademyTask;
 using Microsoft.Extensions.Configuration;
 
 IConfigurationRoot config = new ConfigurationBuilder()
     .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
     .AddJsonFile("appsettings.json").Build();
 
-IConfigurationSection inputfile = config.GetSection("folder");
-IConfigurationSection outFile = config.GetSection("out");
-
-string? folderSection = inputfile.Get<string>();
-string? outSection = outFile.Get<string>();
+string? algorithm = config.GetSection("ComparationAlgorithm").Value;
+string? inputDirectory = config.GetSection("InputDirectoryPath").Value;
+string? outDirectory = config.GetSection("Report")["Path"];
+string? outType = config.GetSection("Report")["Type"];
+List<string>? extensionWhiteList = config.GetSection("FileFilters")
+    .GetSection("ExtensionWhiteList").Get<List<string>>();
+List<string>? directoryBlackList = config.GetSection("FileFilters")
+    .GetSection("DirectoryBlackList").Get<List<string>>();
+List<string>? whiteList = config.GetSection("AuthorFilters")
+    .GetSection("WhiteList").Get<List<string>>();
+List<string>? blackList = config.GetSection("AuthorFilters")
+    .GetSection("BlackList").Get<List<string>>();
 
 try
 {
-    if (folderSection is null)
+    if (inputDirectory is null)
     {
-        throw new Exception("Folder path section not found in appsettings.json");
+        throw new ArgumentNullException("inputDirectory");
     }
-    Dictionary<string, double> difference = new Comparator().CompareFilesInFolder(folderSection);
-    var stringBuilder = new StringBuilder();
-    foreach (KeyValuePair<string, double> dif in difference)
+    if (algorithm is null)
     {
-        //Console.WriteLine(dif.Key + $" {dif.Value:P2}");
-        stringBuilder.Append(dif.Key + $" {dif.Value:P2}\n");
+        throw new ArgumentNullException("algorithm");
     }
-    if (outSection is null)
+
+    Dictionary<string, double> difference = new Comparator().CompareFilesInFolder(algorithm, inputDirectory, 
+        directoryBlackList, extensionWhiteList, whiteList, blackList);
+
+    switch (outType)
     {
-        throw new Exception("Output file path section not found in appsettings.json");
+        case "txt":
+            if (outDirectory is null) throw new ArgumentNullException("outDirectory");
+            new ReportStrategyContext(new TxtWriter()).Write(outDirectory, difference);
+            break;
+        case "json":
+            if (outDirectory is null) throw new ArgumentNullException("outDirectory");
+            new ReportStrategyContext(new JsonWriter()).Write(outDirectory, difference);
+            break;
+        case "console":
+            new ReportStrategyContext(new ConsoleWriter()).Write("", difference);
+            break;
     }
-    File.WriteAllText(outSection, stringBuilder.ToString());
 }
 catch (Exception e)
 {
