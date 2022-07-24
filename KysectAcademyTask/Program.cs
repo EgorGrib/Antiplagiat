@@ -9,8 +9,8 @@ IConfigurationRoot config = new ConfigurationBuilder()
 IConfigurationSection inputfile = config.GetSection("folder");
 IConfigurationSection outFile = config.GetSection("out");
 
-string? folderSection = inputfile.Get<string>();
-string? outSection = outFile.Get<string>();
+string folderSection = inputfile.Get<string>();
+string outSection = outFile.Get<string>();
 
 try
 {
