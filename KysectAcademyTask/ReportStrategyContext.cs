@@ -1,16 +1,16 @@
 namespace KysectAcademyTask;
 
-public class ReportStrategyContext
+internal class ReportStrategyContext
 {
-    private IReportStrategy _reportStrategy;
+    private readonly IReportStrategy _reportStrategy;
 
     public ReportStrategyContext(IReportStrategy reportStrategy)
     {
         _reportStrategy = reportStrategy;
     }
 
-    public void Write(string path, Dictionary<string, double> data)
+    public void Write(Dictionary<string, double> data)
     {
-        _reportStrategy.Unload(path, data);
+        _reportStrategy.Unload(data);
     }
 }

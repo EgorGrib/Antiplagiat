@@ -2,9 +2,14 @@ using System.Text.Json;
 
 namespace KysectAcademyTask;
 
-public class JsonWriter : IReportStrategy
+internal class JsonWriter : IReportStrategy
 {
-    public void Unload(string path, Dictionary<string, double> data)
+    private readonly string _path;
+    public JsonWriter(string path)
+    {
+        _path = path;
+    }
+    public void Unload(Dictionary<string, double> data)
     {
         var output = new Dictionary<string, string>();
         foreach (KeyValuePair<string, double> d in data)
@@ -12,6 +17,6 @@ public class JsonWriter : IReportStrategy
             output[d.Key] = $"{d.Value:P2}";
         }
         string json = JsonSerializer.Serialize(output);
-        File.WriteAllText(path + "\\report.json", json);
+        File.WriteAllText(_path + "\\report.json", json);
     }
 }

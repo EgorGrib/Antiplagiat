@@ -2,15 +2,21 @@ using System.Text;
 
 namespace KysectAcademyTask;
 
-public class TxtWriter : IReportStrategy
+internal class TxtWriter : IReportStrategy
 {
-    public void Unload(string path, Dictionary<string, double> data)
+    private readonly string _path;
+    public TxtWriter(string path)
+    {
+        _path = path;
+    }
+    
+    public void Unload(Dictionary<string, double> data)
     {
         var stringBuilder = new StringBuilder();
         foreach (KeyValuePair<string, double> d in data)
         {
             stringBuilder.Append(d.Key + $" {d.Value:P2}\n");
         }
-        File.WriteAllText(path + "\\report.txt", stringBuilder.ToString());
+        File.WriteAllText(_path + "\\report.txt", stringBuilder.ToString());
     }
 }

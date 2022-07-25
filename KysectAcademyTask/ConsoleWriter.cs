@@ -1,8 +1,8 @@
 namespace KysectAcademyTask;
 
-public class ConsoleWriter : IReportStrategy
+internal class ConsoleWriter : IReportStrategy
 {
-    public void Unload(string path, Dictionary<string, double> data)
+    public void Unload(Dictionary<string, double> data)
     {
         foreach (KeyValuePair<string, double> d in data)
         {

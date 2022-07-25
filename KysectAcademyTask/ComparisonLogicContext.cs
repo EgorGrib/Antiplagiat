@@ -10,7 +10,7 @@ public class ComparisonLogicContext
     }
 
     public Dictionary<string, double> CompareSubmits(List<SubmitFile> submits, 
-        ComparisonAlgorithmContext comparisonAlgorithmContext, List<string>? whiteList, List<string>? blackList)
+        ComparisonAlgorithmContext comparisonAlgorithmContext, List<string> whiteList, List<string> blackList)
     {
         return _comparisonLogic.CompareSubmits(submits, comparisonAlgorithmContext, whiteList, blackList);
     }

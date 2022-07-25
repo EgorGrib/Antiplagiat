@@ -5,17 +5,17 @@ IConfigurationRoot config = new ConfigurationBuilder()
     .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
     .AddJsonFile("appsettings.json").Build();
 
-string? algorithm = config.GetSection("ComparationAlgorithm").Value;
-string? inputDirectory = config.GetSection("InputDirectoryPath").Value;
-string? outDirectory = config.GetSection("Report")["Path"];
-string? outType = config.GetSection("Report")["Type"];
-List<string>? extensionWhiteList = config.GetSection("FileFilters")
+string algorithm = config.GetSection("ComparationAlgorithm").Value;
+string inputDirectory = config.GetSection("InputDirectoryPath").Value;
+string outDirectory = config.GetSection("Report")["Path"];
+string outType = config.GetSection("Report")["Type"];
+List<string> extensionWhiteList = config.GetSection("FileFilters")
     .GetSection("ExtensionWhiteList").Get<List<string>>();
-List<string>? directoryBlackList = config.GetSection("FileFilters")
+List<string> directoryBlackList = config.GetSection("FileFilters")
     .GetSection("DirectoryBlackList").Get<List<string>>();
-List<string>? whiteList = config.GetSection("AuthorFilters")
+List<string> whiteList = config.GetSection("AuthorFilters")
     .GetSection("WhiteList").Get<List<string>>();
-List<string>? blackList = config.GetSection("AuthorFilters")
+List<string> blackList = config.GetSection("AuthorFilters")
     .GetSection("BlackList").Get<List<string>>();
 
 try
@@ -29,21 +29,24 @@ try
         throw new ArgumentNullException("algorithm");
     }
 
+    if (outDirectory is null)
+    {
+        throw new ArgumentNullException("outDirectory");
+    }
+
     Dictionary<string, double> difference = new Comparator().CompareFilesInFolder(algorithm, inputDirectory, 
         directoryBlackList, extensionWhiteList, whiteList, blackList);
 
     switch (outType)
     {
         case "txt":
-            if (outDirectory is null) throw new ArgumentNullException("outDirectory");
-            new ReportStrategyContext(new TxtWriter()).Write(outDirectory, difference);
+            new ReportStrategyContext(new TxtWriter(outDirectory)).Write(difference);
             break;
         case "json":
-            if (outDirectory is null) throw new ArgumentNullException("outDirectory");
-            new ReportStrategyContext(new JsonWriter()).Write(outDirectory, difference);
+            new ReportStrategyContext(new JsonWriter(outDirectory)).Write(difference);
             break;
         case "console":
-            new ReportStrategyContext(new ConsoleWriter()).Write("", difference);
+            new ReportStrategyContext(new ConsoleWriter()).Write(difference);
             break;
     }
 }

@@ -2,59 +2,18 @@ namespace KysectAcademyTask;
 
 public class Comparator
 {
-    public Dictionary<string, double> CompareFilesInFolder(string algoritm, string path, List<string>? dirFilter, 
-        List<string>? extensionWhiteList, List<string>? whiteList, List<string>? blackList)
+    public Dictionary<string, double> CompareFilesInFolder(string algoritm, string path, List<string> dirFilter, 
+        List<string> extensionWhiteList, List<string> whiteList, List<string> blackList)
     {
         string[] files = DirSearch(path).ToArray();
-        var submits = new List<SubmitFile>();
+        var submitsContainer = new SubmitsContainer(path);
         
         if(files.Length == 0)
         {
             throw new Exception("There are no files in the folder");
         }
 
-        if (dirFilter is not null)
-        {
-            for (int i = 0; i < dirFilter.Count; i++)
-            {
-                dirFilter[i] = "\\" + dirFilter[i] + "\\";
-            }
-        }
-        
-        if (extensionWhiteList is not null)
-        {
-            foreach (string file in files)
-            {
-                if (extensionWhiteList.Any(s=>file.EndsWith(s)) && dirFilter is null)
-                {
-                    submits.Add(new SubmitFile(file));
-                }
-                else 
-                {
-                    if (dirFilter is not null && dirFilter.Any(s=>file.Contains(s)))
-                        continue;
-                    if (extensionWhiteList.Any(s=>file.EndsWith(s)))
-                    {
-                        submits.Add(new SubmitFile(file));
-                    }
-                }
-                
-            }
-        }
-        else
-        {
-            foreach (string file in files)
-            {
-                if (dirFilter is null)
-                {
-                    submits.Add(new SubmitFile(file));
-                }
-                else if (!dirFilter.Any(s=>file.Contains(s)))
-                {
-                    submits.Add(new SubmitFile(file));
-                }
-            }
-        }
+        new SubmitsFilter().AddSubmitsWithFilters(submitsContainer, files, dirFilter, extensionWhiteList);
 
         ComparisonAlgorithmContext comparisonAlgorithmContext;
         if (algoritm == "LevenshteinDistance")
@@ -67,7 +26,7 @@ public class Comparator
         }
         
         var comparisonLogicContext = new ComparisonLogicContext(new BasicComparisonLogic());
-        return comparisonLogicContext.CompareSubmits(submits, 
+        return comparisonLogicContext.CompareSubmits(submitsContainer.Submits, 
             comparisonAlgorithmContext, whiteList, blackList);
     }
     
