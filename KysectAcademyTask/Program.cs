@@ -29,7 +29,7 @@ try
         throw new ArgumentNullException("algorithm");
     }
 
-    if (outDirectory is null)
+    if (outDirectory is null && outType != "console")
     {
         throw new ArgumentNullException("outDirectory");
     }
