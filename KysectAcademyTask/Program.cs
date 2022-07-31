@@ -34,21 +34,19 @@ try
         throw new ArgumentNullException("outDirectory");
     }
 
-    Dictionary<string, double> difference = new Comparator().CompareFilesInFolder(algorithm, inputDirectory, 
-        directoryBlackList, extensionWhiteList, whiteList, blackList);
-
-    switch (outType)
+    List<ComparisonResult> difference = new SubmitsComparator(algorithm, directoryBlackList, extensionWhiteList, 
+        whiteList, blackList).CompareSubmitsInFolder(inputDirectory);
+    
+    IReportStrategy report = outType switch
     {
-        case "txt":
-            new ReportStrategyContext(new TxtWriter(outDirectory)).Write(difference);
-            break;
-        case "json":
-            new ReportStrategyContext(new JsonWriter(outDirectory)).Write(difference);
-            break;
-        case "console":
-            new ReportStrategyContext(new ConsoleWriter()).Write(difference);
-            break;
-    }
+        "txt" => new TxtWriter(outDirectory),
+        "json" => new JsonWriter(outDirectory),
+        "console" => new ConsoleWriter(),
+        _ => throw new InvalidOperationException()
+    };
+    
+    report.Unload(difference);
+    
 }
 catch (Exception e)
 {

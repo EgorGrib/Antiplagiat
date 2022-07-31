@@ -2,7 +2,7 @@ namespace KysectAcademyTask;
 
 public class SubmitsContainer
 {
-    public List<SubmitFile> Submits { get; }
+    public List<SubmitFile> Submits { get; set; }
     private readonly string _inputDirectoryName;
 
     public SubmitsContainer(string path)
@@ -13,6 +13,6 @@ public class SubmitsContainer
 
     public void Add(string submitFile)
     {
-        Submits.Add(new SubmitFile(submitFile, _inputDirectoryName));
+        Submits.Add(new SubmitFile(submitFile));
     }
 }

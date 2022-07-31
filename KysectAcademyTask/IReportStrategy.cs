@@ -1,6 +1,6 @@
 namespace KysectAcademyTask;
 
-internal interface IReportStrategy
+public interface IReportStrategy
 {
-    public void Unload(Dictionary<string, double> data);
+    public void Unload(List<ComparisonResult> data);
 }

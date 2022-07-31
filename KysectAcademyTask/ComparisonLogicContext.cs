@@ -2,16 +2,15 @@ namespace KysectAcademyTask;
 
 public class ComparisonLogicContext
 {
-    private IComparisonLogic _comparisonLogic;
+    private readonly IComparisonLogic _comparisonLogic;
     
     public ComparisonLogicContext(IComparisonLogic comparisonLogic)
     {
         _comparisonLogic = comparisonLogic;
     }
 
-    public Dictionary<string, double> CompareSubmits(List<SubmitFile> submits, 
-        ComparisonAlgorithmContext comparisonAlgorithmContext, List<string> whiteList, List<string> blackList)
+    public List<ComparisonResult> CompareSubmits(List<SubmitFile> submits)
     {
-        return _comparisonLogic.CompareSubmits(submits, comparisonAlgorithmContext, whiteList, blackList);
+        return _comparisonLogic.CompareSubmits(submits);
     }
 }

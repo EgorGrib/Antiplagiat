@@ -2,50 +2,63 @@ namespace KysectAcademyTask;
 
 public class SubmitsFilter
 {
-    public void AddSubmitsWithFilters(SubmitsContainer submitsContainer, string[] files, 
-        List<string> dirFilter, List<string> extensionWhiteList)
+    private readonly List<string> _dirFilter;
+    private readonly List<string> _extensionWhiteList;
+    private readonly List<string> _blackList;
+
+    public SubmitsFilter(List<string> dirFilter, List<string> extensionWhiteList, List<string> blackList)
     {
-        if (dirFilter is not null)
+        _dirFilter = dirFilter;
+        _extensionWhiteList = extensionWhiteList;
+        _blackList = blackList;
+    }
+
+    public List<SubmitFile> Filter(IReadOnlyCollection<string> input)
+    {
+        var submits = new List<SubmitFile>();
+        if (_dirFilter is not null)
         {
-            for (int i = 0; i < dirFilter.Count; i++)
+            for (int i = 0; i < _dirFilter.Count; i++)
             {
-                dirFilter[i] = "\\" + dirFilter[i] + "\\";
+                _dirFilter[i] = "\\" + _dirFilter[i] + "\\";
             }
         }
-        
-        if (extensionWhiteList is not null)
+
+        if (_extensionWhiteList is not null)
         {
-            foreach (string file in files)
+            foreach (string file in input)
             {
-                if (extensionWhiteList.Any(s=>file.EndsWith(s)) && dirFilter is null)
+                if (_extensionWhiteList.Any(s => file.EndsWith(s)) && _dirFilter is null)
                 {
-                    submitsContainer.Add(file);
+                    submits.Add(new SubmitFile(file));
                 }
-                else 
+                else
                 {
-                    if (dirFilter is not null && dirFilter.Any(s=>file.Contains(s)))
+                    if (_dirFilter is not null && _dirFilter.Any(s => file.Contains(s)))
                         continue;
-                    if (extensionWhiteList.Any(s=>file.EndsWith(s)))
+                    if (_extensionWhiteList.Any(s => file.EndsWith(s)))
                     {
-                        submitsContainer.Add(file);
+                        submits.Add(new SubmitFile(file));
                     }
                 }
-                
+
             }
         }
         else
         {
-            foreach (string file in files)
+            foreach (string file in input)
             {
-                if (dirFilter is null)
+                if (_dirFilter is null)
                 {
-                    submitsContainer.Add(file);
+                    submits.Add(new SubmitFile(file));
                 }
-                else if (!dirFilter.Any(s=>file.Contains(s)))
+                else if (!_dirFilter.Any(s => file.Contains(s)))
                 {
-                    submitsContainer.Add(file);
+                    submits.Add(new SubmitFile(file));
                 }
             }
         }
+        
+        return _blackList is null ? submits : submits.Where(t => !_blackList.Contains(t.StudentName)).ToList();
     }
 }

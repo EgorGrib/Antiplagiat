@@ -1,12 +1,12 @@
 namespace KysectAcademyTask;
 
-internal class ConsoleWriter : IReportStrategy
+public class ConsoleWriter : IReportStrategy
 {
-    public void Unload(Dictionary<string, double> data)
+    public void Unload(List<ComparisonResult> data)
     {
-        foreach (KeyValuePair<string, double> d in data)
+        foreach (ComparisonResult d in data)
         {
-            Console.WriteLine(d.Key + $" {d.Value:P2}");
+            Console.WriteLine($"{d.FirstPath} {d.SecondPath} {d.Similarity:P2}");
         }
     }
 }
