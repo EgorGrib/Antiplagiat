@@ -2,15 +2,18 @@ namespace KysectAcademyTask;
 
 public class SubmitsFilter
 {
+    private readonly string inputDirectory;
     private readonly List<string> _dirFilter;
     private readonly List<string> _extensionWhiteList;
     private readonly List<string> _blackList;
 
-    public SubmitsFilter(List<string> dirFilter, List<string> extensionWhiteList, List<string> blackList)
+    public SubmitsFilter(string inputDirectory, List<string> dirFilter, 
+        List<string> extensionWhiteList, List<string> blackList)
     {
         _dirFilter = dirFilter;
         _extensionWhiteList = extensionWhiteList;
         _blackList = blackList;
+        this.inputDirectory = inputDirectory;
     }
 
     public List<SubmitFile> Filter(IReadOnlyCollection<string> input)
@@ -30,7 +33,7 @@ public class SubmitsFilter
             {
                 if (_extensionWhiteList.Any(s => file.EndsWith(s)) && _dirFilter is null)
                 {
-                    submits.Add(new SubmitFile(file));
+                    submits.Add(new SubmitFile(file, inputDirectory));
                 }
                 else
                 {
@@ -38,7 +41,7 @@ public class SubmitsFilter
                         continue;
                     if (_extensionWhiteList.Any(s => file.EndsWith(s)))
                     {
-                        submits.Add(new SubmitFile(file));
+                        submits.Add(new SubmitFile(file, inputDirectory));
                     }
                 }
 
@@ -50,11 +53,11 @@ public class SubmitsFilter
             {
                 if (_dirFilter is null)
                 {
-                    submits.Add(new SubmitFile(file));
+                    submits.Add(new SubmitFile(file, inputDirectory));
                 }
                 else if (!_dirFilter.Any(s => file.Contains(s)))
                 {
-                    submits.Add(new SubmitFile(file));
+                    submits.Add(new SubmitFile(file, inputDirectory));
                 }
             }
         }

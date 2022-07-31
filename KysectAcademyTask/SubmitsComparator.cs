@@ -25,8 +25,9 @@ public class SubmitsComparator
         {
             throw new Exception("There are no files in the folder");
         }
-
-        var submitFilter = new SubmitsFilter(_dirFilter, _extensionWhiteList, _blackList);
+        
+        string inputDirectoryName = path.Split("/")[^1];
+        var submitFilter = new SubmitsFilter(inputDirectoryName, _dirFilter, _extensionWhiteList, _blackList);
         List<SubmitFile> submitFiles = submitFilter.Filter(files);
 
         IComparisonAlgorithm comparisonAlgorithm;

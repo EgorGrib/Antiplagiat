@@ -7,10 +7,10 @@ public class SubmitFile
     public string LaboratoryWorkName { get; }
     public string Extension { get; }
 
-    public SubmitFile(string path)
+    public SubmitFile(string path, string inputDirectory)
     {
         Path = path.Replace("\\", "/");
-        string s = Path.Remove(0, Path.IndexOf("RootDirectoryTest"));
+        string s = Path.Remove(0, Path.IndexOf(inputDirectory));
         string[] splitted = s.Split("/");
         StudentName = splitted[2];
         LaboratoryWorkName = splitted[3];
