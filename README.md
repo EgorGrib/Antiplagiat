@@ -1,7 +1,7 @@
-# The system for checking the honesty of students' assignments. 
-Using the Levenshtein distance algorithm, the percentage of similarity of each file in the specified folder is calculated in pairs. The appsettings.json file specifies the application configuration, you must specify the folder in which the students' work is located, the type and path of the report with the result of the comparison (txt/json/console). It is also possible to set filters: a white list of file extensions, a blacklist of directories (files in which you do not need to compare) and a blacklist/whitelist of students (authors of works). 
+# The system for checking the honesty of students assignments. 
+Using the Levenshtein distance algorithm, the percentage of similarity of each file in the specified folder is calculated in pairs. The appsettings.json file specifies the application configuration, you must specify the folder in which the students work is located, the type and path of the report with the result of the comparison (txt/json/console). It is also possible to set filters: a white list of file extensions, a blacklist of directories (files in which you do not need to compare) and a blacklist/whitelist of students (authors of works). 
 
-The directory with students' work has the following structure
+The directory with students work has the following structure
 ```
 RootDirectory/
 -GroupName1 (for exampl - "M3234")
