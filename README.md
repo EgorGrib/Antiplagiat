@@ -40,3 +40,10 @@ RootDirectory/
 		BlackList: [ "Username3", "Username4" ]
 	}
 }
+```
+
+Work in progress: 
+* attach a database to store the results of the comparison and not to re-check known results. 
+* write unit tests.
+* divide the project into modules. 
+* implement Web API.
