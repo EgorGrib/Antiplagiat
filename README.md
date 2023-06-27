@@ -5,18 +5,18 @@ The directory with students work has the following structure
 ```
 RootDirectory/
 -GroupName1 (for exampl - "M3234")
-	-AuthorName1 (for exampl - "Andrew Gray")
-		-HomeworkName1 (for exampl - "4. OOP")
-			-SubmitDate1 (for example - "20191118202349")
-				-*files with code*
-			-SubmitionDate2
-				-...
-		-HomeworkName2
-			-...
-	-AuthorName2
-		-...
+  -AuthorName1 (for exampl - "Andrew Gray")
+    -HomeworkName1 (for exampl - "4. OOP")
+      -SubmitDate1 (for example - "20191118202349")
+        -*files with code*
+      -SubmitionDate2
+        -...
+    -HomeworkName2
+       -...
+  -AuthorName2
+    -...
 -GroupName2
-	-...
+  -...
 ```
 
 Сonfig file example (appsettings.json)
