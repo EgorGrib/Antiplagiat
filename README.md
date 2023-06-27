@@ -6,7 +6,7 @@ The directory with students work has the following structure
 RootDirectory/
 -GroupName1 (for exampl - "M3234")
 	-AuthorName1 (for exampl - "Andrew Gray")
-		-HomeworkName1 (for exampl - "4. INI файл")
+		-HomeworkName1 (for exampl - "4. OOP")
 			-SubmitDate1 (for example - "20191118202349")
 				-*files with code*
 			-SubmitionDate2
@@ -22,23 +22,23 @@ RootDirectory/
 Сonfig file example (appsettings.json)
 ```
 {
-	ComparationAlgorithms: "LevenshteinDistance",
-	InputDirectoryPath: "P:/ath/To/Input",
-	Report:
-	{
-		Path: "P:/ath/to/Outpout",
-		Type: "JSON"
-	},
-	FileFilters:
-	{
-		ExtensionWhiteList: [ "cs", "py", "java" ],
-		DirectoryBlackList: [ ".git", ".vs", "bin" ]
-	},
-	AuthorFilters:
-	{
-		WhiteList: [ "Username1", "Username2" ],
-		BlackList: [ "Username3", "Username4" ]
-	}
+  ComparationAlgorithms: "LevenshteinDistance",
+  InputDirectoryPath: "P:/ath/To/Input",
+  Report:
+  {
+    Path: "P:/ath/to/Outpout",
+    Type: "JSON"
+  },
+  FileFilters:
+  {
+    ExtensionWhiteList: [ "cs", "py", "java" ],
+    DirectoryBlackList: [ ".git", ".vs", "bin" ]
+  },
+  AuthorFilters:
+  {
+    WhiteList: [ "Username1", "Username2" ],
+    BlackList: [ "Username3", "Username4" ]
+  }
 }
 ```
 
